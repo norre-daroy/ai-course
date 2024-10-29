@@ -1,6 +1,6 @@
+import 'dotenv/config'
 import { openai } from './openai.js'
 import math from 'advanced-calculator'
-
 const QUESTION = process.argv[2] || 'hi'
 
 const messages = [
@@ -11,36 +11,36 @@ const messages = [
 ]
 
 const functions = {
-  calculate({ expression }) {
+  calculate: async ({ expression }) => {
     return math.evaluate(expression)
   },
 }
 
-const getCompletion = (messages) => {
-  return openai.chat.completions.create({
-    model: 'gpt-4o-2024-08-06',
+const getCompletion = async (messages) => {
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4-0613',
     messages,
-    temperature: 0,
-    function_call: { name: 'calculate' },
     functions: [
       {
         name: 'calculate',
-        description: 'Run math expressions',
+        description: 'Run a math expression',
         parameters: {
           type: 'object',
           properties: {
             expression: {
               type: 'string',
               description:
-                'The math expression to evaluate like "2 * 3 + (21 /2 ) ^ 2"',
+                'Then math expression to evaluate like "2 * 3 + (21 / 2) ^ 2"',
             },
           },
-
           required: ['expression'],
         },
       },
     ],
+    temperature: 0,
   })
+
+  return response
 }
 
 let response
@@ -51,27 +51,27 @@ while (true) {
     console.log(response.choices[0].message.content)
     break
   } else if (response.choices[0].finish_reason === 'function_call') {
-    const fName = response.choices[0].message.function_call.name
+    const fnName = response.choices[0].message.function_call.name
     const args = response.choices[0].message.function_call.arguments
 
-    const funcToCall = functions[fName]
+    const functionToCall = functions[fnName]
     const params = JSON.parse(args)
 
-    const result = funcToCall(params)
+    const result = functionToCall(params)
 
     messages.push({
       role: 'assistant',
       content: null,
       function_call: {
-        name: fName,
+        name: fnName,
         arguments: args,
       },
     })
 
     messages.push({
       role: 'function',
-      name: fName,
-      content: JSON.stringify({ result }),
+      name: fnName,
+      content: JSON.stringify({ result: result }),
     })
   }
 }
