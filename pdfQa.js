@@ -47,7 +47,7 @@ const loadStore = async (pdfFile) => {
       const blob = await response.blob()
       const file = new File([blob], 'temp.pdf') // Create a temporary file
       pdfDocs = await docsFromPDF(file)
-      console.log(blob)
+      console.log('blob', blob)
     } else {
       // Load PDF from local file
       pdfDocs = await docsFromPDF(pdfFile)
@@ -71,23 +71,29 @@ const query = async () => {
   for (let index = 0; index < pdfFiles.length; index++) {
     const pdfFile = pdfFiles[index]
     const store = await loadStore(pdfFile)
-    const results = await store.similaritySearch(question, 1)
-
+    const results = await store.similaritySearch('symptoms', 1)
+    // console.log('store', store)
+    // console.log('results', results)
     const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4-turbo',
       temperature: 0,
       messages: [
         {
           role: 'assistant',
           content:
-            'You are a helpful AI assistant. Answer questions to your best ability.',
+            'You are a helpful AI assistant. Answer questions to best ability.',
         },
         {
           role: 'user',
-          content: `Answer the following question using the provided context. If you cannot answer the question with the context, don't lie and make up stuff. Just say you need more context. List the symptoms and barriers in an itemized bulleted list exactly as stated in the pdf file.
-          Question: Identify symptoms or barriers of the disease ${question}
+          content: `Answer question using provided context. List the symptoms and barriers in an itemized bulleted list exactly as stated in the pdf file.
+          Question: What are the symptoms or barriers of the disease ${question}
     
-          Context: ${results.map((r) => r.pageContent).join('\n')}`,
+          Context: ${store.memoryVectors
+            .map((r) => {
+              //   console.log('r', r.pageContent)
+              return r.content
+            })
+            .join('\n')}`,
         },
       ],
     })
