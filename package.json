@@ -17,6 +17,7 @@
     "langchain": "^0.3.5",
     "openai": "^4.68.1",
     "pdf-parse": "^1.1.1",
+    "xml2js": "^0.6.2",
     "youtube-transcript": "^1.2.1",
     "youtubei.js": "^9.4.0"
   }
