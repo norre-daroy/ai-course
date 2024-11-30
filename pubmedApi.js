@@ -1,6 +1,8 @@
 import fetch from 'node-fetch' // Import fetch for Node.js
 import xml2js from 'xml2js' // Import xml2js for XML parsing
 import dotenv from 'dotenv'
+// import PdfQuery from './pdfQa.js'
+
 dotenv.config()
 
 const fetchPubMedData = async (searchTerm) => {
@@ -108,6 +110,9 @@ const fetchPdfsByTopic = async (topic) => {
 
   console.log('Article Ids', articleIds)
   console.log('PDF Links:', pdfLinks)
+
+  // TODO: Run functino when pdf links are in pdf format
+  // PdfQuery(pdfLinks)
 }
 
 // Call the function with a specific topic
