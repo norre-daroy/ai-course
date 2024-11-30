@@ -62,7 +62,7 @@ const loadStore = async (pdfFile) => {
   return createStore([...pdfDocs])
 }
 
-const query = async () => {
+export const PdfQuery = async () => {
   const pdfFiles = [
     'https://pmc.ncbi.nlm.nih.gov/articles/PMC8196750/pdf/jcm-10-02235.pdf',
     'https://pmc.ncbi.nlm.nih.gov/articles/PMC10767470/pdf/cureus-0015-00000050017.pdf',
@@ -72,8 +72,7 @@ const query = async () => {
     const pdfFile = pdfFiles[index]
     const store = await loadStore(pdfFile)
     const results = await store.similaritySearch('symptoms', 1)
-    // console.log('store', store)
-    // console.log('results', results)
+
     const response = await openai.chat.completions.create({
       model: 'gpt-4-turbo',
       temperature: 0,
@@ -107,3 +106,4 @@ const query = async () => {
 }
 
 query()
+// export default PdfQuery
