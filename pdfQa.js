@@ -47,7 +47,6 @@ const loadStore = async (pdfFile) => {
       const blob = await response.blob()
       const file = new File([blob], 'temp.pdf') // Create a temporary file
       pdfDocs = await docsFromPDF(file)
-      console.log('blob', blob)
     } else {
       // Load PDF from local file
       pdfDocs = await docsFromPDF(pdfFile)
@@ -87,12 +86,7 @@ export const PdfQuery = async () => {
           content: `Answer question using provided context. List the symptoms and barriers in an itemized bulleted list exactly as stated in the pdf file.
           Question: What are the symptoms or barriers of the disease ${question}
     
-          Context: ${store.memoryVectors
-            .map((r) => {
-              //   console.log('r', r.pageContent)
-              return r.content
-            })
-            .join('\n')}`,
+          Context: ${store.memoryVectors.map((r) => r.content).join('\n')}`,
         },
       ],
     })
@@ -105,5 +99,5 @@ export const PdfQuery = async () => {
   }
 }
 
-query()
+PdfQuery()
 // export default PdfQuery
