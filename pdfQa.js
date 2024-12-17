@@ -65,6 +65,7 @@ export const PdfQuery = async () => {
   const pdfFiles = [
     'https://pmc.ncbi.nlm.nih.gov/articles/PMC8196750/pdf/jcm-10-02235.pdf',
     'https://pmc.ncbi.nlm.nih.gov/articles/PMC10767470/pdf/cureus-0015-00000050017.pdf',
+    'https://www.tandfonline.com/doi/full/10.1080/08820538.2024.2433636',
   ]
 
   for (let index = 0; index < pdfFiles.length; index++) {
