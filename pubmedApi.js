@@ -74,7 +74,15 @@ const fetchPubMedArticle = async (articleId) => {
       // Check if elocationid exists and has elements
       if (elocationid) {
         const doi = elocationid // Get the DOI
-        // console.log('DOI:', doi) // Log the DOI value
+        console.log(
+          'xml',
+          JSON.stringify(
+            xmlDoc.PubmedArticleSet.PubmedArticle[0].MedlineCitation[0]
+              .Article[0],
+            null,
+            2
+          )
+        )
 
         const articleLink = `https://doi.org/${doi}`
         return articleLink // Construct the PDF link using DOI
